@@ -1,0 +1,60 @@
+﻿@model IEnumerable<Studoc.Models.Proyecto>
+<h2>Lista de Proyectos</h2>
+
+<table class="table table-hover">
+    <thead class="thead-dark">
+        <tr>
+            <th scope="col">
+                #
+            </th>
+            <th scope="col">
+                @Html.DisplayNameFor(model => model.Nombre)
+            </th>
+            <th scope="col">
+                @Html.DisplayNameFor(model => model.D_Industrial)
+            </th>
+            <th scope="col">
+                @Html.DisplayNameFor(model => model.D_Responsable)
+            </th>
+            <th scope="col">
+                @Html.DisplayNameFor(model => model.ODS)
+            </th>
+            <th scope="col">
+                @Html.DisplayNameFor(model => model.Semestre)
+            </th>
+            <th scope="col">
+                @Html.DisplayNameFor(model => model.Categoria)
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+
+        @foreach (var item in Model)
+        {
+            <tr>
+                <th scope="row">
+                    <a asp-action="Edit" asp-route-id="@item.ID">Editar</a> |
+                    <a asp-action="Delete" asp-route-id="@item.ID">Borrar</a>
+                </th>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Nombre)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.D_Industrial)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.D_Responsable)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.ODS)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Semestre)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Categoria)
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
