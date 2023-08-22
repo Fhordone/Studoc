@@ -35,6 +35,7 @@
                 <th scope="row">
                     <a asp-action="Edit" asp-route-id="@item.ID">Editar</a> |
                     <a asp-action="Delete" asp-route-id="@item.ID">Borrar</a>
+                    <a asp-action="Publicacion" asp-route-id="@item.ID">View</a>
                 </th>
                 <td>
                     @Html.DisplayFor(modelItem => item.Nombre)
