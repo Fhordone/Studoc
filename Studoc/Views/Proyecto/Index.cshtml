@@ -1,5 +1,8 @@
 ﻿@model IEnumerable<Studoc.Models.Proyecto>
 <h2>Lista de Proyectos</h2>
+<a asp-action="CrearProyecto">
+    <button type="button" class="btn btn-primary">Crear Proyecto</button>
+</a>
 
 <table class="table table-hover">
     <thead class="thead-dark">
@@ -33,7 +36,7 @@
         {
             <tr>
                 <th scope="row">
-                    <a asp-action="Edit" asp-route-id="@item.ID">Editar</a> |
+                    <a asp-action="EditProyecto" asp-route-id="@item.ID">Editar</a> |
                     <a asp-action="Delete" asp-route-id="@item.ID">Borrar</a>
                     <a asp-action="Publicacion" asp-route-id="@item.ID">View</a>
                     <a asp-action="EditPublicacion" asp-route-id="@item.ID">View</a>

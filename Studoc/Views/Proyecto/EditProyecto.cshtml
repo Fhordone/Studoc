@@ -1,0 +1,59 @@
+﻿@model Studoc.Models.Proyecto
+@{
+    ViewData["Title"] = "Editar Proyecto";
+}
+<center>
+    <h4>Editar Proyecto</h4>
+    <form asp-action="EditProyecto">
+        <table border="0">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="ID" />
+            <tr>
+                <td width="40%">Nombres:</td>
+                <td width="60%">
+                    <input type="text" asp-for="Nombre">
+                    <span asp-validation-for="Nombre" class="text-danger"></span>
+                </td>
+            </tr>
+
+            <tr>
+                <td width="40%">D_Industrial:</td>
+                <td width="60%">
+                    <input type="text" asp-for="D_Industrial">
+                    <span asp-validation-for="D_Industrial" class="text-danger"></span>
+                </td>
+            </tr>
+
+            <tr>
+                <td width="40%">D_Responsable:</td>
+                <td width="60%">
+                    <input type="text" asp-for="D_Responsable">
+                    <span asp-validation-for="D_Responsable" class="text-danger"></span>
+                </td>
+            </tr>
+            <tr>
+                <td width="40%">ODS:</td>
+                <td width="60%">
+                    <input type="text" asp-for="ODS">
+                    <span asp-validation-for="ODS" class="text-danger"></span>
+                </td>
+            </tr>
+            <tr>
+                <td width="40%">Semestre:</td>
+                <td width="60%">
+                    <input type="text" asp-for="Semestre">
+                    <span asp-validation-for="Semestre" class="text-danger"></span>
+                </td>
+            </tr>
+            <tr>
+                <td width="40%">Categoria:</td>
+                <td width="60%">
+                    <input type="text" asp-for="Categoria">
+                    <span asp-validation-for="Categoria" class="text-danger"></span>
+                </td>
+            </tr>
+        </table>
+
+        <input type="submit" value="Guardar" class="btn btn-primary" />
+    </form>
+</center>
