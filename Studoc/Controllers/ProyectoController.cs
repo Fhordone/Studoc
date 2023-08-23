@@ -21,8 +21,22 @@ namespace Studoc.Controllers
             var listProject = _context.Proyecto.OrderBy(s => s.ID).ToList();
             return View("Index", listProject);
         }
+        public IActionResult CrearProyecto()
+        {
+            return View("CrearProyecto"); 
+        }
+        public IActionResult CreateProyecto(Proyecto objproyecto)
+        {
+            if (ModelState.IsValid)
+            {
+                _context.Add(objproyecto);
+                _context.SaveChanges();
 
-        public IActionResult Edit(int? id)
+                return View("CrearProyecto", objproyecto);
+            }
+            return View("CrearProyecto");
+        }
+        public IActionResult EditProyecto(int? id)
         {
             if (id == null)
             {
@@ -36,7 +50,7 @@ namespace Studoc.Controllers
             return View(create); //Añadir Create
         }
         [HttpPost]
-        public IActionResult Edit(int id, Proyecto proyecto)
+        public IActionResult EditProyecto(int id, Proyecto proyecto)
         {
             if (ModelState.IsValid)
             {
