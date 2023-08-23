@@ -1,7 +1,10 @@
-﻿namespace Studoc.Models
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace Studoc.Models
 {
     public class Proyecto
     {
+        [Key]
         public int ID { get; set; }
         public string? Nombre { get; set; }
         public string? D_Industrial { get; set; }
@@ -9,5 +12,6 @@
         public string? ODS { get; set; }
         public string? Semestre { get; set; }
         public string? Categoria { get; set; }
+        public Publicacion Publicacion { get; set; }
     }
 }

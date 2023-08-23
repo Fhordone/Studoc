@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Studoc.Data;
 using Studoc.Models;
 
@@ -53,33 +54,33 @@ namespace Studoc.Controllers
         }
         public IActionResult Publicacion(int id)
         {
+            var publicaciones =  _context.Proyecto.Include(u => u.Publicacion).FirstOrDefault(u => u.ID == id);
+            return View(publicaciones);
+        }
+        public IActionResult EditPublicacion(int id)
+        {
             if (id == null)
             {
                 return NotFound();
             }
-            var create = _context.Proyecto.Find(id);
-            if (create == null)
+            var publicaciones = _context.Proyecto.Include(u => u.Publicacion).FirstOrDefault(u => u.ID == id);
+            if (publicaciones == null)
             {
                 return NotFound();
             }
-            return View("Publicacion");
+            return View("EditPublicacion");
         }
 
         [HttpPost]
-        public IActionResult GuardarContenido(string titulo, string contenido)
+        public IActionResult EditPublicacion(int id, Publicacion publicacion)
         {
-
-            var nuevoContenido = new Publicacion
-            {
-                Titulo = titulo,
-                Contenido = contenido,
-
-            };
-
-            _context.Publicacion.Add(nuevoContenido);
-            _context.SaveChanges(); //Falta agregarle la llave primaria del Proyecto
-
-            return RedirectToAction("Index"); // Debe redirigir al view de la publicacion sin modificar
+            
+                var publicaciones = _context.Proyecto.Include(u => u.Publicacion).FirstOrDefault(u => u.ID == id);
+                _context.Update(publicacion);
+                _context.SaveChanges();
+                
+            
+            return View(publicaciones);
         }
     }
 }

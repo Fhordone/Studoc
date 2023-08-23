@@ -1,69 +1,19 @@
-@{
-    ViewData["Title"] = "Publicaciones";
-}
+﻿@model Studoc.Models.Proyecto
 
 <!DOCTYPE html>
 <html>
-
 <head>
-    <meta name="viewport" content="width=device-width" />
-    <title>@ViewBag.Title</title>
-    <link href="https://cdn.quilljs.com/1.3.6/quill.snow.css" rel="stylesheet">
-    <script src="https://cdn.quilljs.com/1.3.6/quill.js"></script>
+    <title>Detalles del Usuario</title>
 </head>
-
 <body>
-    <h2>@ViewBag.Title</h2>
-    <!-- <input type="hidden" asp-for="ID" /> -->
-    <form method="post" asp-action="GuardarContenido">
-        <label for="titulo">Título:</label>
-        <input type="text" id="titulo" name="titulo" />
+    <h1>Detalles de la publicación</h1>
 
-        <div id="editor"></div>
+    <h3>Proyecto</h3>
+    <p>Nombre: @Model.Nombre</p>
 
-        <button type="submit">Guardar Contenido</button>
-    </form>
-
-    <script>
-        var quill = new Quill('#editor', {
-            theme: 'snow',
-            modules: {
-                toolbar: [
-                    ['bold', 'italic', 'underline', 'strike'], // Formato de texto
-                    ['link'], // Enlace
-                    [{ 'header': 1 }, { 'header': 2 }, 'blockquote'], // Encabezados y bloque de citas
-                    [{ 'list': 'ordered' }, { 'list': 'bullet' }], // Listas ordenadas y no ordenadas
-                    [{ 'script': 'sub' }, { 'script': 'super' }], // Subíndice y superíndice
-                    [{ 'indent': '-1' }, { 'indent': '+1' }], // Aumentar y disminuir sangría
-                    ['image'], // Insertar imagen
-                    ['clean'] // Limpiar formato
-                ]
-            }
-        });
-
-        document.querySelector('form').addEventListener('submit', function (e) {
-            // Obtiene el contenido en formato HTML
-            var contenidoHtml = quill.root.innerHTML;
-
-            // Agrega el contenido al campo oculto para enviarlo al servidor
-            var contenidoInput = document.createElement('input');
-            contenidoInput.type = 'hidden';
-            contenidoInput.name = 'contenido';
-            contenidoInput.value = contenidoHtml;
-            this.appendChild(contenidoInput);
-        });
-
-        // Ajustar tamaño de imagen después de insertarla
-        quill.on('editor-change', function (eventName, ...args) {
-            if (eventName === 'text-change') {
-                var images = document.querySelectorAll('.ql-editor img');
-                images.forEach(function (img) {
-                    img.style.maxWidth = '50%'; // Ajustar ancho máximo
-                    img.style.height = 'auto';   // Ajustar altura automáticamente
-                });
-            }
-        });
-    </script>
+    <h3>Publicación</h3>
+    <p>Descripción: @Model.Publicacion.Titulo</p>
+    <p>Descripción: @Model.Publicacion.Contenido</p>
+    <a asp-area="" asp-controller="Proyecto" asp-action="EditPublicacion">Editar Publicacion</a>
 </body>
-
 </html>

@@ -1,0 +1,77 @@
+@{
+    ViewData["Title"] = "Editar Publicaciones";
+}
+
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>@ViewBag.Title</title>
+    <link href="https://cdn.quilljs.com/1.3.6/quill.snow.css" rel="stylesheet">
+    <script src="https://cdn.quilljs.com/1.3.6/quill.js"></script>
+</head>
+<body>
+    <h2>@ViewBag.Title</h2>
+    
+    <form method="post" asp-action="EditPublicacion">
+        <label for="titulo">Título:</label>
+        <input type="text" id="titulo" name="titulo" />
+
+        <div id="editor"></div>
+
+        <button type="submit">Guardar Contenido</button>
+    </form>
+
+    <script>
+        var quill = new Quill('#editor', {
+            theme: 'snow',
+            modules: {
+                toolbar: [
+                    ['bold', 'italic', 'underline', 'strike'], // Formato de texto
+                    ['link'], // Enlace
+                    [{ 'header': 1 }, { 'header': 2 }, 'blockquote'], // Encabezados y bloque de citas
+                    [{ 'list': 'ordered' }, { 'list': 'bullet' }], // Listas ordenadas y no ordenadas
+                    [{ 'script': 'sub' }, { 'script': 'super' }], // Subíndice y superíndice
+                    [{ 'indent': '-1' }, { 'indent': '+1' }], // Aumentar y disminuir sangría
+                    ['image'], // Insertar imagen
+                    ['clean'] // Limpiar formato
+                ]
+            }
+        });
+
+        document.querySelector('form').addEventListener('submit', function (e) {
+            // Obtiene el contenido en formato HTML
+            var contenidoHtml = quill.root.innerHTML;
+
+
+            // Limpia el contenido HTML para eliminar etiquetas no deseadas
+            var cleanHtml = stripHtmlTags(contenidoHtml);
+
+            // Agrega el contenido limpio al campo oculto para enviarlo al servidor
+            var contenidoInput = document.createElement('input');
+            contenidoInput.type = 'hidden';
+            contenidoInput.name = 'contenido';
+            contenidoInput.value = cleanHtml;
+            this.appendChild(contenidoInput);
+        });
+
+        function stripHtmlTags(html) {
+            var doc = new DOMParser().parseFromString(html, 'text/html');
+            return doc.body.textContent || "";
+        }
+
+        // Ajustar tamaño de imagen después de insertarla
+        quill.on('editor-change', function (eventName, ...args) {
+            if (eventName === 'text-change') {
+                var images = document.querySelectorAll('.ql-editor img');
+                images.forEach(function (img) {
+                    img.style.maxWidth = '50%'; // Ajustar ancho máximo
+                    img.style.height = 'auto';   // Ajustar altura automáticamente
+                });
+            }
+        });
+    </script>
+</body>
+
+</html>
