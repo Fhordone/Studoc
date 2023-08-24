@@ -13,5 +13,6 @@ namespace Studoc.Models
         public string? Semestre { get; set; }
         public string? Categoria { get; set; }
         public Publicacion? Publicacion { get; set; }
+        public ICollection<Rel_User_Project> Usuarios { get; set; } = new List<Rel_User_Project>();
     }
 }

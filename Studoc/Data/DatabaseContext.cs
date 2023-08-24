@@ -11,6 +11,6 @@ namespace Studoc.Data
         }
         public DbSet<Studoc.Models.Proyecto> Proyecto { get; set; }
         public DbSet<Studoc.Models.Publicacion> Publicacion { get; set; }
-        public DbSet<Studoc.Models.Usuario> Usuario { get; set; }
+        public DbSet<Studoc.Models.Usuario> Usuario { get; set; } 
     }
 }
