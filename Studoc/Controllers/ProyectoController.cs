@@ -99,24 +99,53 @@ namespace Studoc.Controllers
             {
                 return NotFound();
             }
-            var publicaciones = _context.Proyecto.Include(u => u.Publicacion).FirstOrDefault(u => u.ID == id);
-            if (publicaciones == null)
+
+            var proyecto = _context.Proyecto.Include(p => p.Publicacion).FirstOrDefault(p => p.ID == id);
+
+            if (proyecto == null || proyecto.Publicacion == null)
             {
                 return NotFound();
             }
-            return View("EditPublicacion");
+
+            return View(proyecto.Publicacion); // Pasamos solo la publicación a la vista
         }
 
         [HttpPost]
         public IActionResult EditPublicacion(int id, Publicacion publicacion)
         {
-            
-                var publicaciones = _context.Proyecto.Include(u => u.Publicacion).FirstOrDefault(u => u.ID == id);
-                _context.Update(publicacion);
-                _context.SaveChanges();
-                
-            
-            return View(publicaciones);
+            if (id != publicacion.ID)
+            {
+                return NotFound();
+            }
+
+            if (ModelState.IsValid)
+            {
+                try
+                {
+                    _context.Update(publicacion);
+                    _context.SaveChanges();
+                }
+                catch (DbUpdateConcurrencyException)
+                {
+                    if (!PublicacionExists(publicacion.ID))
+                    {
+                        return NotFound();
+                    }
+                    else
+                    {
+                        throw;
+                    }
+                }
+
+                return RedirectToAction("Index", "Proyecto"); // Redirigir a la página principal de proyectos
+            }
+
+            return View(publicacion);
+        }
+
+        private bool PublicacionExists(int id)
+        {
+            return _context.Publicacion.Any(p => p.ID == id);
         }
     }
 }

@@ -1,3 +1,5 @@
+@model Publicacion
+
 @{
     ViewData["Title"] = "Editar Publicaciones";
 }
@@ -13,12 +15,12 @@
 </head>
 <body>
     <h2>@ViewBag.Title</h2>
-    
-    <form method="post" asp-action="EditPublicacion">
-        <label for="titulo">Título:</label>
-        <input type="text" id="titulo" name="titulo" />
 
-        <div id="editor"></div>
+    <form method="post" asp-action="EditPublicacion" asp-route-id="@Model.ID">
+        <label for="titulo">Título:</label>
+        <input type="text" id="titulo" name="titulo" value="@Model.Titulo" />
+
+        <div id="editor">@Html.Raw(Model.Contenido)</div>
 
         <button type="submit">Guardar Contenido</button>
     </form>
