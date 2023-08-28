@@ -1,58 +1,108 @@
-﻿@model Studoc.Models.Proyecto
+﻿@model Proyecto
+
 @{
-    ViewData["Title"] = "Create Proyecto";
+    ViewData["Title"] = "Crear Proyecto";
 }
-<center>
-    <h4>Agregar Proyecto</h4>
-    <form asp-action="CreateProyecto">
-        <table border="0">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <tr>
-                <td width="40%">Nombres:</td>
-                <td width="60%">
-                    <input type="text" asp-for="Nombre">
-                    <span asp-validation-for="Nombre" class="text-danger"></span>
-                </td>
-            </tr>
 
-            <tr>
-                <td width="40%">D_Industrial:</td>
-                <td width="60%">
-                    <input type="text" asp-for="D_Industrial">
-                    <span asp-validation-for="D_Industrial" class="text-danger"></span>
-                </td>
-            </tr>
+<h2>Crear Proyecto</h2>
 
-            <tr>
-                <td width="40%">D_Responsable:</td>
-                <td width="60%">
-                    <input type="text" asp-for="D_Responsable">
-                    <span asp-validation-for="D_Responsable" class="text-danger"></span>
-                </td>
-            </tr>
-            <tr>
-                <td width="40%">ODS:</td>
-                <td width="60%">
-                    <input type="text" asp-for="ODS">
-                    <span asp-validation-for="ODS" class="text-danger"></span>
-                </td>
-            </tr>
-            <tr>
-                <td width="40%">Semestre:</td>
-                <td width="60%">
-                    <input type="text" asp-for="Semestre">
-                    <span asp-validation-for="Semestre" class="text-danger"></span>
-                </td>
-            </tr>
-            <tr>
-                <td width="40%">Categoria:</td>
-                <td width="60%">
-                    <input type="text" asp-for="Categoria">
-                    <span asp-validation-for="Categoria" class="text-danger"></span>
-                </td>
-            </tr>
-        </table>
+<form asp-action="CreateProyecto">
+    <div class="form-group">
+        <label for="Nombre">Nombre:</label>
+        <input type="text" class="form-control" asp-for="Nombre" />
+    </div>
+    <div class="form-group">
+        <label for="D_Responsable">D. Responsable:</label>
+        <input type="number" class="form-control" asp-for="D_Responsable" />
+    </div>
+    <div class="form-group">
+        <label for="ODS">ODS:</label>
+        <input type="text" class="form-control" asp-for="ODS" />
+    </div>
+    <div class="form-group">
+        <label for="Semestre">Semestre:</label>
+        <input type="text" class="form-control" asp-for="Semestre" />
+    </div>
+    <div class="form-group">
+        <label for="Categoria">Categoria:</label>
+        <input type="text" class="form-control" asp-for="Categoria" />
+    </div>
 
-        <input type="submit" value="Crear" class="btn btn-primary" />
-    </form>
-</center>
+    <div class="form-group">
+    <label for="SearchUsuarios">Buscar integrantes:</label>
+    <input type="text" class="form-control" id="SearchUsuarios" placeholder="Buscar integrantes..." />
+</div>
+<div class="form-group">
+    <label for="SelectedUserIds">Selecciona los integrantes:</label>
+    <select multiple class="form-control" name="UserIds" id="SelectedUserIds" asp-items="@(new SelectList(ViewBag.Usuario, "ID", "NombresApellidos"))">
+    </select>
+</div>
+<ul id="userList"></ul>
+
+    <button type="submit" class="btn btn-primary">Crear Proyecto</button>
+</form>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const selectedUserIds = document.getElementById("SelectedUserIds");
+        const searchUsuarios = document.getElementById("SearchUsuarios");
+
+        searchUsuarios.addEventListener("input", function () {
+            const searchTerm = searchUsuarios.value.toLowerCase();
+            const options = selectedUserIds.options;
+
+            for (let i = 0; i < options.length; i++) {
+                const option = options[i];
+                const optionText = option.text.toLowerCase();
+                if (optionText.includes(searchTerm)) {
+                    option.style.display = "";
+                } else {
+                    option.style.display = "none";
+                }
+            }
+        });
+    });
+    document.addEventListener("DOMContentLoaded", function () {
+        const selectedUserIds = document.getElementById("SelectedUserIds");
+        const userIdsInput = document.getElementById("UserIds");
+        const addUserButton = document.getElementById("addUser");
+        const removeUserButton = document.getElementById("removeUser");
+        const userList = document.getElementById("userList");
+
+        addUserButton.addEventListener("click", function () {
+            const selectedOption = selectedUserIds.options[selectedUserIds.selectedIndex];
+            const optionValue = selectedOption.value;
+
+            if (optionValue) {
+                const userListItem = document.createElement("li");
+                userListItem.innerHTML = selectedOption.text;
+                userListItem.dataset.userId = optionValue;
+                userList.appendChild(userListItem);
+
+                selectedOption.remove();
+                updateUserIdsInput();
+            }
+        });
+
+        removeUserButton.addEventListener("click", function () {
+            const selectedUser = userList.querySelector("li[data-user-id]:last-child");
+
+            if (selectedUser) {
+                const userId = selectedUser.dataset.userId;
+                const userOption = new Option(selectedUser.textContent, userId);
+                selectedUserIds.appendChild(userOption);
+                userList.removeChild(selectedUser);
+                updateUserIdsInput();
+            }
+        });
+
+        function updateUserIdsInput() {
+            const userIds = Array.from(userList.querySelectorAll("li[data-user-id]")).map(li => li.dataset.userId);
+            userIdsInput.value = userIds.join(",");
+        }
+    });
+</script>
+
+
+
+

@@ -23,17 +23,39 @@ namespace Studoc.Controllers
         }
         public IActionResult CrearProyecto()
         {
+            ViewBag.Usuario = _context.Usuario.Select(u => new
+            {
+                ID = u.ID,
+                NombresApellidos = $"{u.Nombres} {u.Apellidos}"
+            }).ToList();
             return View("CrearProyecto"); 
         }
-        public IActionResult CreateProyecto(Proyecto objproyecto)
+        public IActionResult CreateProyecto(Proyecto proyecto, List<int> UserIds)
         {
             if (ModelState.IsValid)
             {
-                _context.Add(objproyecto);
+                _context.Proyecto.Add(proyecto);
                 _context.SaveChanges();
 
-                return View("CrearProyecto", objproyecto);
+                foreach (int idUsuario in UserIds)
+                {
+                    var relUserProject = new Rel_User_Project
+                    {
+                        ID_User = idUsuario,
+                        ID_Proyecto = proyecto.ID
+                    };
+                    _context.Rel_User_Project.Add(relUserProject);
+                }
+                _context.SaveChanges();
+
+                return RedirectToAction("Index", "Proyecto");
             }
+
+            ViewBag.Usuario = _context.Usuario.Select(u => new
+            {
+                ID = u.ID,
+                NombresApellidos = $"{u.Nombres} {u.Apellidos}"
+            }).ToList();
             return View("CrearProyecto");
         }
         public IActionResult EditProyecto(int? id)

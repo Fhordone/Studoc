@@ -9,8 +9,8 @@ namespace Studoc.Models
         public int ID_Proyecto { get; set; }
 
         [ForeignKey("ID_User")]
-        public Usuario Usuario { get; set;}
+        public Usuario? Usuario { get; set;}
         [ForeignKey("ID_Proyecto")]
-        public Proyecto Proyecto { get; set;}
+        public Proyecto? Proyecto { get; set;}
     }
 }
