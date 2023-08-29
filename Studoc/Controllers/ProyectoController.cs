@@ -111,6 +111,7 @@ namespace Studoc.Controllers
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public IActionResult EditPublicacion(int id, Publicacion publicacion)
         {
             if (id != publicacion.ID)
@@ -122,8 +123,21 @@ namespace Studoc.Controllers
             {
                 try
                 {
-                    _context.Update(publicacion);
-                    _context.SaveChanges();
+                    // Buscar la publicación directamente por su ID
+                    var publicacionToUpdate = _context.Publicacion.Find(publicacion.ID);
+
+                    if (publicacionToUpdate != null)
+                    {
+                        // Actualizar el contenido de la publicación
+                        publicacionToUpdate.Titulo = publicacion.Titulo;
+                        publicacionToUpdate.Contenido = publicacion.Contenido;
+
+                        _context.SaveChanges();
+                    }
+                    else
+                    {
+                        return NotFound();
+                    }
                 }
                 catch (DbUpdateConcurrencyException)
                 {

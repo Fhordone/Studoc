@@ -8,15 +8,53 @@
 <html>
 <head>
     <meta name="viewport" content="width=device-width" />
-    <title>Index</title>
+    <title>Iniciar Sesión</title>
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f2f2f2;
+        }
+
+        .login-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .login-box {
+            background-color: white;
+            border-radius: 5px;
+            box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            width: 300px;
+        }
+
+        .login-title {
+            font-size: 24px;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .form-label {
+            font-weight: bold;
+        }
+
+        .btn-login {
+            background-color: #007BFF;
+            color: white;
+            width: 100%;
+            margin-top: 20px;
+        }
+    </style>
 </head>
 <body>
 
-    @*------ GOOGLEAR ====> form bootstrap 5 ----------------*@
+    <div class="login-container">
+        <div class="login-box">
 
-    <div class="row mt-5">
-        <div class="col-sm-4 offset-sm-4">
+            <h2 class="login-title">Iniciar Sesión</h2>
 
             <form asp-controller="Login" asp-action="Index" method="post">
                 <div class="mb-3">
@@ -27,13 +65,11 @@
                     <label for="Clave" class="form-label">Contraseña</label>
                     <input type="password" class="form-control" id="Clave" name="Clave" placeholder="Ingrese su contraseña" required>
                 </div>
-                <button type="submit" class="btn btn-primary">Ingresar</button>
+                <button type="submit" class="btn btn-login">Ingresar</button>
             </form>
 
         </div>
     </div>
-
-
 
 </body>
 <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>

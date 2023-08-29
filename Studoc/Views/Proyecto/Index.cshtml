@@ -1,59 +1,57 @@
 ﻿@model IEnumerable<Studoc.Models.Proyecto>
-<h2>Lista de Proyectos</h2>
+
+<h2>Proyectos</h2>
 <a asp-action="CrearProyecto">
     <button type="button" class="btn btn-primary">Crear Proyecto</button>
 </a>
 
-<table class="table table-hover">
-    <thead class="thead-dark">
-        <tr>
-            <th scope="col">
-                #
-            </th>
-            <th scope="col">
-                @Html.DisplayNameFor(model => model.Nombre)
-            </th>
-            <th scope="col">
-                @Html.DisplayNameFor(model => model.D_Responsable)
-            </th>
-            <th scope="col">
-                @Html.DisplayNameFor(model => model.ODS)
-            </th>
-            <th scope="col">
-                @Html.DisplayNameFor(model => model.Semestre)
-            </th>
-            <th scope="col">
-                @Html.DisplayNameFor(model => model.Categoria)
-            </th>
-        </tr>
-    </thead>
-    <tbody>
-
-        @foreach (var item in Model)
-        {
-            <tr>
-                <th scope="row">
-                    <a asp-action="EditProyecto" asp-route-id="@item.ID">Editar</a> |
+<div class="card-container">
+    @foreach (var item in Model)
+    {
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">@Html.DisplayFor(modelItem => item.Nombre)</h5>
+                <div class="card-options">
+                    <a asp-action="EditProyecto" asp-route-id="@item.ID">Editar</a>
                     <a asp-action="Delete" asp-route-id="@item.ID">Borrar</a>
-                    <a asp-action="Publicacion" asp-route-id="@item.ID">View</a>
-                    <a asp-action="EditPublicacion" asp-route-id="@item.ID">View</a>
-                </th>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Nombre)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.D_Responsable)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.ODS)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Semestre)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Categoria)
-                </td>
-            </tr>
+                    <a asp-action="Publicacion" asp-route-id="@item.ID">Ver Publicación</a>
+                    <a asp-action="EditPublicacion" asp-route-id="@item.ID">Editar Publicación</a>
+                </div>
+            </div>
+        </div>
+    }
+</div>
+
+<style>
+    .card-container {
+        display: flex;
+        flex-wrap: wrap;
+    }
+
+    .card {
+        width: calc(33.33% - 20px);
+        margin: 10px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
+    }
+
+    .card-body {
+        padding: 10px;
+    }
+
+    .card-title {
+        font-size: 18px;
+        margin: 0;
+    }
+
+    .card-options {
+        margin-top: 10px;
+    }
+
+        .card-options a {
+            margin-right: 10px;
+            text-decoration: none;
+            color: #007BFF;
         }
-    </tbody>
-</table>
+</style>
