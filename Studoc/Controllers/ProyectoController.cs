@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using Studoc.Data;
 using Studoc.Models;
+using Microsoft.AspNetCore.Hosting;
 
 namespace Studoc.Controllers
 {
@@ -9,12 +10,16 @@ namespace Studoc.Controllers
     {
         private readonly DatabaseContext _context;
         private readonly ILogger<HomeController> _logger;
+        private readonly IWebHostEnvironment _env;
+    
 
         public ProyectoController(ILogger<HomeController> logger,
-         DatabaseContext context)
+         DatabaseContext context,
+         IWebHostEnvironment env)
         {
             _logger = logger;
             _context = context;
+            _env = env;
         }
         public IActionResult Index()
         {
@@ -34,6 +39,21 @@ namespace Studoc.Controllers
         {
             if (ModelState.IsValid)
             {
+                if (proyecto.Imagen != null && proyecto.Imagen.Length > 0)
+                {
+                    // Guardar la imagen en una carpeta en el servidor
+                    string rutaCarpeta = Path.Combine(_env.WebRootPath, "imagenes_proyectos");
+                    string nombreArchivo = Guid.NewGuid().ToString() + Path.GetExtension(proyecto.Imagen.FileName);
+                    string rutaCompleta = Path.Combine(rutaCarpeta, nombreArchivo);
+
+                    using (var stream = new FileStream(rutaCompleta, FileMode.Create))
+                    {
+                        proyecto.Imagen.CopyTo(stream);
+                    }
+
+                    proyecto.ruta_img = "/imagenes_proyectos/" + nombreArchivo;  // Guardar la ruta en el modelo
+                }
+
                 _context.Proyecto.Add(proyecto);
                 _context.SaveChanges();
 
@@ -130,7 +150,7 @@ namespace Studoc.Controllers
                     {
                         // Actualizar el contenido de la publicación
                         publicacionToUpdate.Titulo = publicacion.Titulo;
-                        publicacionToUpdate.Contenido = publicacion.Contenido;
+                        publicacionToUpdate.Paso_1 = publicacion.Paso_1;
 
                         _context.SaveChanges();
                     }

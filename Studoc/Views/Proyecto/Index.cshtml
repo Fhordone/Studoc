@@ -11,6 +11,10 @@
         <div class="card">
             <div class="card-body">
                 <h5 class="card-title">@Html.DisplayFor(modelItem => item.Nombre)</h5>
+                @if (!string.IsNullOrEmpty(item.ruta_img))
+                {
+                    <img src="@item.ruta_img" alt="Imagen de Proyecto" class="card-image" />
+                }
                 <div class="card-options">
                     <a asp-action="EditProyecto" asp-route-id="@item.ID">Editar</a>
                     <a asp-action="Delete" asp-route-id="@item.ID">Borrar</a>
@@ -54,4 +58,10 @@
             text-decoration: none;
             color: #007BFF;
         }
+
+    .card-image {
+        max-width: 100%;
+        height: auto;
+        margin-bottom: 10px;
+    }
 </style>
