@@ -11,6 +11,7 @@ namespace Studoc.Controllers
         private readonly DatabaseContext _context;
         private readonly ILogger<HomeController> _logger;
         private readonly IWebHostEnvironment _env;
+
     
 
         public ProyectoController(ILogger<HomeController> logger,
@@ -108,31 +109,35 @@ namespace Studoc.Controllers
             _context.SaveChanges();
             return RedirectToAction(nameof(Index));
         }
-        public IActionResult Publicacion(int id)
+        // ---------------------------------------------------FIN DE PROYECTO-----------------------------------------------------------------
+        // ---------------------------------------------------iNICIO DE PUBLICACION-----------------------------------------------------------
+        //Redirecciona a la visualizar Publicación
+        public IActionResult Publicacion(int id) 
         {
             var publicaciones =  _context.Proyecto.Include(u => u.Publicacion).FirstOrDefault(u => u.ID == id);
             return View(publicaciones);
         }
         public IActionResult EditPublicacion(int id)
         {
-            if (id == null)
+            var publicacion = _context.Publicacion
+        .Include(p => p.Pasos) // Cargar los pasos relacionados
+        .FirstOrDefault(p => p.ID == id);
+
+            if (publicacion == null)
             {
                 return NotFound();
             }
 
-            var proyecto = _context.Proyecto.Include(p => p.Publicacion).FirstOrDefault(p => p.ID == id);
+            // Ahora puedes acceder a los pasos sin que se produzca una excepción de referencia nula.
+            var pasos = publicacion.Pasos;
 
-            if (proyecto == null || proyecto.Publicacion == null)
-            {
-                return NotFound();
-            }
-
-            return View(proyecto.Publicacion); // Pasamos solo la publicación a la vista
+            return View(publicacion);
         }
 
+        // POST: Proyecto/EditPublicacion/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult EditPublicacion(int id, Publicacion publicacion)
+        public async Task<IActionResult> EditPublicacion(int id, Publicacion publicacion)
         {
             if (id != publicacion.ID)
             {
@@ -143,21 +148,55 @@ namespace Studoc.Controllers
             {
                 try
                 {
-                    // Buscar la publicación directamente por su ID
-                    var publicacionToUpdate = _context.Publicacion.Find(publicacion.ID);
+                    // Carga la entidad original desde la base de datos
+                    var originalPublicacion = await _context.Publicacion
+                        .Include(p => p.Pasos)
+                        .FirstOrDefaultAsync(p => p.ID == id);
 
-                    if (publicacionToUpdate != null)
-                    {
-                        // Actualizar el contenido de la publicación
-                        publicacionToUpdate.Titulo = publicacion.Titulo;
-                        publicacionToUpdate.Paso_1 = publicacion.Paso_1;
-
-                        _context.SaveChanges();
-                    }
-                    else
+                    if (originalPublicacion == null)
                     {
                         return NotFound();
                     }
+
+                    // Actualiza los campos de la entidad original desde la entidad modificada
+                    originalPublicacion.Titulo = publicacion.Titulo;
+                    // Actualiza otros campos de la publicación si es necesario
+
+                    // Elimina los pasos que ya no existen en la entidad modificada
+                    foreach (var originalPaso in originalPublicacion.Pasos.ToList())
+                    {
+                        if (!publicacion.Pasos.Any(p => p.ID == originalPaso.ID))
+                        {
+                            _context.Remove(originalPaso);
+                        }
+                    }
+
+                    // Itera sobre los pasos de la publicación
+                    foreach (var paso in publicacion.Pasos)
+                    {
+                        // Comprueba si el paso es nuevo o existente
+                        if (paso.ID == 0)
+                        {
+                            // Este paso es nuevo, así que agrega el paso a la lista de pasos de la publicación
+                            originalPublicacion.Pasos.Add(paso);
+                        }
+                        else
+                        {
+                            // Este paso ya existe, así que actualiza sus campos
+                            var originalPaso = originalPublicacion.Pasos.FirstOrDefault(p => p.ID == paso.ID);
+                            if (originalPaso != null)
+                            {
+                                originalPaso.Titulo = paso.Titulo;
+                                originalPaso.Contenido = paso.Contenido;
+                                // Actualiza otros campos del paso si es necesario
+                            }
+                        }
+                    }
+
+                    // Actualiza la entidad original en el contexto
+                    _context.Update(originalPublicacion);
+
+                    await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
@@ -170,12 +209,11 @@ namespace Studoc.Controllers
                         throw;
                     }
                 }
-
-                return RedirectToAction("Index", "Proyecto"); // Redirigir a la página principal de proyectos
+                return RedirectToAction("Index"); // Redirige a la página que desees después de editar la publicación.
             }
-
             return View(publicacion);
         }
+
 
         private bool PublicacionExists(int id)
         {
