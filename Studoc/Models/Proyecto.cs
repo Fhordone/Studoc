@@ -13,6 +13,7 @@ namespace Studoc.Models
         public string? Semestre { get; set; }
         public string? Categoria { get; set; }
         public string? ruta_img { get; set; }
+        
         [NotMapped]
         public IFormFile Imagen { get; set; }
         public Publicacion? Publicacion { get; set; }

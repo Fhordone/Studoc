@@ -1,139 +1,44 @@
 @model Publicacion
 
-@{
-    ViewData["Title"] = "Editar Publicaciones";
-}
+<h1>Editar Publicación</h1>
 
-<!DOCTYPE html>
-<html>
+<form asp-action="EditPublicacion" method="post" enctype="multipart/form-data">
+    <input type="hidden" asp-for="ID" />
 
-<head>
-    <meta name="viewport" content="width=device-width" />
-    <title>@ViewBag.Title</title>
-    <link href="https://cdn.quilljs.com/1.3.6/quill.snow.css" rel="stylesheet">
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 0;
-            background-color: #f2f2f2;
-        }
-
-        .container {
-            max-width: 800px;
-            margin: 20px auto;
-            padding: 20px;
-            background-color: white;
-            border-radius: 5px;
-            box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
-        }
-
-        h2 {
-            font-size: 24px;
-            margin-bottom: 20px;
-        }
-
-        form {
-            margin-top: 20px;
-        }
-
-        label {
-            display: block;
-            font-weight: bold;
-            margin-bottom: 5px;
-        }
-
-        input[type="text"] {
-            width: 100%;
-            padding: 10px;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-            margin-bottom: 15px;
-        }
-
-        #editor {
-            border: 1px solid #ccc;
-            border-radius: 5px;
-            margin-bottom: 20px;
-        }
-
-        button[type="submit"] {
-            background-color: #007BFF;
-            color: white;
-            border: none;
-            padding: 10px 20px;
-            border-radius: 5px;
-            cursor: pointer;
-        }
-    </style>
-    <script src="https://cdn.quilljs.com/1.3.6/quill.js"></script>
-</head>
-
-<body>
-    <div class="container">
-        <h2>@ViewBag.Title</h2>
-
-        <form method="post" asp-action="EditPublicacion" asp-route-id="@Model.ID">
-            @Html.AntiForgeryToken()
-
-            <label for="Titulo">Título:</label>
-            <input type="text" id="Titulo" name="Titulo" value="@Model.Titulo" />
-
-            <div id="editor">@Html.Raw(Model.Paso_1)</div>
-
-            <button type="submit">Guardar Contenido</button>
-        </form>
+    <div class="form-group">
+        <label asp-for="Titulo" class="control-label"></label>
+        <input asp-for="Titulo" class="form-control" />
+        <span asp-validation-for="Titulo" class="text-danger"></span>
     </div>
 
-    <script>
-        var quill = new Quill('#editor', {
-            theme: 'snow',
-            modules: {
-                toolbar: [
-                    ['bold', 'italic', 'underline', 'strike'], // Formato de texto
-                    ['link'], // Enlace
-                    [{ 'header': 1 }, { 'header': 2 }, 'blockquote'], // Encabezados y bloque de citas
-                    [{ 'list': 'ordered' }, { 'list': 'bullet' }], // Listas ordenadas y no ordenadas
-                    [{ 'script': 'sub' }, { 'script': 'super' }], // Subíndice y superíndice
-                    [{ 'indent': '-1' }, { 'indent': '+1' }], // Aumentar y disminuir sangría
-                    ['image'], // Insertar imagen
-                    ['clean'] // Limpiar formato
-                ]
-            }
-        });
+    <!-- ... otros campos de la publicación ... -->
 
-        document.querySelector('form').addEventListener('submit', function (e) {
-            // Obtiene el contenido en formato HTML
-            var contenidoHtml = quill.root.innerHTML;
+    @for (var i = 0; i < Model.Pasos.Count; i++)
+    {
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h3 class="panel-title">Paso @i</h3>
+            </div>
+            <div class="panel-body">
+                <div class="form-group">
+                    <label asp-for="Pasos[i].Titulo" class="control-label"></label>
+                    <input asp-for="Pasos[i].Titulo" class="form-control" />
+                    <span asp-validation-for="Pasos[i].Titulo" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Pasos[i].Contenido" class="control-label"></label>
+                    <textarea asp-for="Pasos[i].Contenido" class="form-control" rows="4"></textarea>
+                    <span asp-validation-for="Pasos[i].Contenido" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Pasos[i].ImagenFile" class="control-label"></label>
+                    <input type="file" asp-for="Pasos[i].ImagenFile" class="form-control" />
+                    <span asp-validation-for="Pasos[i].ImagenFile" class="text-danger"></span>
+                </div>
+                
+            </div>
+        </div>
+    }
 
-
-            // Limpia el contenido HTML para eliminar etiquetas no deseadas
-            var cleanHtml = stripHtmlTags(contenidoHtml);
-
-            // Agrega el contenido limpio al campo oculto para enviarlo al servidor
-            var contenidoInput = document.createElement('input');
-            contenidoInput.type = 'hidden';
-            contenidoInput.name = 'contenido';
-            contenidoInput.value = cleanHtml;
-            this.appendChild(contenidoInput);
-        });
-
-        function stripHtmlTags(html) {
-            var doc = new DOMParser().parseFromString(html, 'text/html');
-            return doc.body.textContent || "";
-        }
-
-        // Ajustar tamaño de imagen después de insertarla
-        quill.on('editor-change', function (eventName, ...args) {
-            if (eventName === 'text-change') {
-                var images = document.querySelectorAll('.ql-editor img');
-                images.forEach(function (img) {
-                    img.style.maxWidth = '50%'; // Ajustar ancho máximo
-                    img.style.height = 'auto';   // Ajustar altura automáticamente
-                });
-            }
-        });
-    </script>
-</body>
-
-</html>
+    <button type="submit" class="btn btn-primary">Guardar</button>
+</form>
