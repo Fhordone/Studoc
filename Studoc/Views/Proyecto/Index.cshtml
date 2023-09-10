@@ -1,8 +1,15 @@
 ﻿@model IEnumerable<Studoc.Models.Proyecto>
-
-<h2>Proyectos</h2>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Proyectos</title>
+    <link rel="stylesheet" href="~/css/IndexProyecto.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://kit.fontawesome.com/019078dbc4.js" crossorigin="anonymous"></script>
+</head>
+<body>
 <a asp-action="CrearProyecto">
-    <button type="button" class="btn btn-primary">Crear Proyecto</button>
+    <button type="button" class="boton-crear">+ Crear Proyecto</button>
 </a>
 
 <div class="card-container">
@@ -10,58 +17,39 @@
     {
         <div class="card">
             <div class="card-body">
-                <h5 class="card-title">@Html.DisplayFor(modelItem => item.Nombre)</h5>
                 @if (!string.IsNullOrEmpty(item.ruta_img))
                 {
-                    <img src="@item.ruta_img" alt="Imagen de Proyecto" class="card-image" />
+                    <a asp-action="Publicacion" asp-route-id="@item.ID"><img src="@item.ruta_img" alt="Imagen de Proyecto" class="card-image" /></a>
                 }
                 <div class="card-options">
-                    <a asp-action="EditProyecto" asp-route-id="@item.ID">Editar</a>
-                    <a asp-action="Delete" asp-route-id="@item.ID">Borrar</a>
-                    <a asp-action="Publicacion" asp-route-id="@item.ID">Ver Publicación</a>
-                    <a asp-action="EditPublicacion" asp-route-id="@item.ID">Editar Publicación</a>
+                    <div class="card-header">
+                        <h5 class="card-title">@Html.DisplayFor(modelItem => item.Nombre)</h5>
+                        <div class="dropdown">
+                            <button class="dropdown-toggle" type="button" data-toggle="dropdown">
+                                <i class="fas fa-ellipsis-v"></i> <!-- Ícono de tres puntos verticales -->
+                            </button>
+                            <ul class="dropdown-menu">
+                                <li><a asp-action="EditProyecto" asp-route-id="@item.ID">Editar</a></li>
+                                <li><a asp-action="Delete" asp-route-id="@item.ID">Borrar</a></li>
+                                <li><a asp-action="EditPublicacion" asp-route-id="@item.ID">Editar Publicación</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                    <h5 class="card-content">@Html.DisplayFor(modelItem => item.Semestre)</h5>
                 </div>
             </div>
         </div>
     }
 </div>
 
-<style>
-    .card-container {
-        display: flex;
-        flex-wrap: wrap;
-    }
-
-    .card {
-        width: calc(33.33% - 20px);
-        margin: 10px;
-        border: 1px solid #ccc;
-        border-radius: 5px;
-        box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
-    }
-
-    .card-body {
-        padding: 10px;
-    }
-
-    .card-title {
-        font-size: 18px;
-        margin: 0;
-    }
-
-    .card-options {
-        margin-top: 10px;
-    }
-
-        .card-options a {
-            margin-right: 10px;
-            text-decoration: none;
-            color: #007BFF;
-        }
-
-    .card-image {
-        max-width: 100%;
-        height: auto;
-        margin-bottom: 10px;
-    }
-</style>
+<script src="~/lib/jquery/dist/jquery.min.js"></script>
+<script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+    $(document).ready(function () {
+        $('.dropdown-toggle').on('click', function () {
+            $(this).next('.dropdown-menu').toggle();
+        });
+    });
+</script>
+</body>
+</html>

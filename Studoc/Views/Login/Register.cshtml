@@ -1,7 +1,62 @@
-﻿
+﻿@model Usuario
 @{
-    ViewData["Title"] = "Register";
+    Layout = null;
 }
 
-<h1>Register</h1>
+<!DOCTYPE html>
 
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Registrarse</title>
+    <link rel="stylesheet" href="~/css/Login.css" />
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="left">
+            <img src="~/img/register.png" alt="Imagen de registro" width="500">
+        </div>
+        <div class="right">
+            <div class="title">Forma parte de Diseño Responsable</div>
+            <div class="form">
+                <div class="title-form">Registro</div>
+                <form>
+                    <div class="row">
+                        <div>
+                            <label for="nombres">Nombres:</label>
+                            <input type="text" id="nombres" name="nombres">
+                        </div>
+                        <div>
+                            <label for="apellidos">Apellidos:</label>
+                            <input type="text" id="apellidos" name="apellidos">
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div>
+                            <label for="fecha_nacimiento">Fecha de Nacimiento:</label>
+                            <input type="date" id="fecha_nacimiento" name="fecha_nacimiento">
+                        </div>
+                        <div>
+                            <label for="codigo_pucp">Código PUCP:</label>
+                            <input type="number" id="codigo_pucp" name="codigo_pucp">
+                        </div>
+                    </div>
+                    <div>
+                        <label for="correo">Correo Electrónico:</label>
+                        <input type="email" id="correo" name="correo">
+                    </div>
+                    <div>
+                        <label for="contrasena">Contraseña:</label>
+                        <input type="password" id="contrasena" name="contrasena">
+                    </div>
+                    <input type="submit" value="Registrarse">
+                    <div class="text-login">Si ya cuentas con un usuario, accede <a class="text-login-aqui" asp-controller="Login" asp-action="Index">aquí</a>.</div>
+                </form>
+            </div>
+        </div>
+    </div>
+</body>
+
+
+</html>
