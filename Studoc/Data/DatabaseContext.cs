@@ -15,8 +15,8 @@ namespace Studoc.Data
         public DbSet<Studoc.Models.Usuario> Usuario { get; set; }
         public DbSet<Studoc.Models.Paso> Paso { get; set; }
         public DbSet<Studoc.Models.Rel_User_Project> Rel_User_Project  { get; set; }
-        public DbSet<Roles> Roles { get; set; }
-        public DbSet<UsuarioRol> UsuariosRoles { get; set; }
+        public DbSet<Rol> Rol { get; set; }
+        public DbSet<UsuarioRol> UsuarioRol { get; set; }
         public List<int> Usuarios { get; set; } = new List<int>();
         public List<int> Pasos { get; set; } = new List<int>();
 
@@ -29,12 +29,12 @@ namespace Studoc.Data
 
             modelBuilder.Entity<UsuarioRol>()
                 .HasOne(ur => ur.Usuario)
-                .WithMany(u => u.UsuariosRoles)
+                .WithMany(u => u.UsuarioRol)
                 .HasForeignKey(ur => ur.UsuarioId);
 
             modelBuilder.Entity<UsuarioRol>()
                 .HasOne(ur => ur.Rol)
-                .WithMany(r => r.UsuariosRoles)
+                .WithMany(r => r.UsuarioRol)
                 .HasForeignKey(ur => ur.RolId);
             // Relación entre Proyecto y Publicacion
             modelBuilder.Entity<Proyecto>()

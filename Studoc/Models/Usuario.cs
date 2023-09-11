@@ -15,6 +15,6 @@ namespace Studoc.Models
         public string? Escuela { get; set; }
         public string? Direccion { get; set; }
         public ICollection<Rel_User_Project>? Proyectos { get; set; } = new List<Rel_User_Project>();
-        public ICollection<UsuarioRol>? UsuariosRoles { get; set; }
+        public ICollection<UsuarioRol>? UsuarioRol { get; set; }
     }
 }

@@ -3,9 +3,13 @@ using Microsoft.EntityFrameworkCore;
 using Studoc.Data;
 using Studoc.Models;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
+using System.Security.Claims;
 
 namespace Studoc.Controllers
 {
+    [Authorize]
     public class ProyectoController : Controller
     {
         private readonly DatabaseContext _context;
@@ -108,6 +112,22 @@ namespace Studoc.Controllers
             _context.Proyecto.Remove(create); //Añadir Create
             _context.SaveChanges();
             return RedirectToAction(nameof(Index));
+        }
+        public IActionResult val_integrante()
+        {
+            return View();
+        }
+        public IActionResult MyProjects()
+        {
+            // Obtén el usuario actual (esto puede variar según cómo gestionas la autenticación)
+            var usuarioActualId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+            // Filtra los proyectos en los que el usuario actual es un integrante
+            var proyectos = _context.Proyecto
+                .Where(p => p.Usuarios.Any(u => u.ID_User.ToString() == usuarioActualId))
+                .ToList();
+
+            return View("MyProjects", proyectos);
         }
         // ---------------------------------------------------FIN DE PROYECTO-----------------------------------------------------------------
         // ---------------------------------------------------iNICIO DE PUBLICACION-----------------------------------------------------------

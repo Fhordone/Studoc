@@ -4,6 +4,10 @@
     ViewData["Title"] = "Crear Proyecto";
 }
 
+<head>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://kit.fontawesome.com/019078dbc4.js" crossorigin="anonymous"></script>
+</head>
 <h2>Crear Proyecto</h2>
 
 <form asp-action="CreateProyecto" enctype="multipart/form-data">
@@ -43,7 +47,8 @@
     </div>
     <div class="form-group">
         <label for="SelectedUserIds">Selecciona los integrantes:</label>
-        <select multiple class="form-control" name="UserIds" id="SelectedUserIds" asp-items="@(new SelectList(ViewBag.Usuario, "ID", "NombresApellidos"))">
+        <select multiple class="form-control" name="UserIds" id="SelectedUserIds"
+            asp-items="@(new SelectList(ViewBag.Usuario, "ID", "NombresApellidos"))">
         </select>
     </div>
     <ul id="userList"></ul>
@@ -111,7 +116,3 @@
         }
     });
 </script>
-
-
-
-

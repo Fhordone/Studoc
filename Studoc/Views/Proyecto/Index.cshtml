@@ -8,9 +8,6 @@
     <script src="https://kit.fontawesome.com/019078dbc4.js" crossorigin="anonymous"></script>
 </head>
 <body>
-<a asp-action="CrearProyecto">
-    <button type="button" class="boton-crear">+ Crear Proyecto</button>
-</a>
 
 <div class="card-container">
     @foreach (var item in Model)
@@ -24,16 +21,19 @@
                 <div class="card-options">
                     <div class="card-header">
                         <h5 class="card-title">@Html.DisplayFor(modelItem => item.Nombre)</h5>
-                        <div class="dropdown">
-                            <button class="dropdown-toggle" type="button" data-toggle="dropdown">
-                                <i class="fas fa-ellipsis-v"></i> <!-- Ícono de tres puntos verticales -->
-                            </button>
-                            <ul class="dropdown-menu">
-                                <li><a asp-action="EditProyecto" asp-route-id="@item.ID">Editar</a></li>
-                                <li><a asp-action="Delete" asp-route-id="@item.ID">Borrar</a></li>
-                                <li><a asp-action="EditPublicacion" asp-route-id="@item.ID">Editar Publicación</a></li>
-                            </ul>
-                        </div>
+                            @if (User.IsInRole("Administrador"))
+                            {
+                                <div class="dropdown">
+                                    <button class="dropdown-toggle" type="button" data-toggle="dropdown">
+                                        <i class="fas fa-ellipsis-v"></i> <!-- Ícono de tres puntos verticales -->
+                                    </button>
+                                    <ul class="dropdown-menu">
+                                        <li><a asp-action="EditProyecto" asp-route-id="@item.ID">Editar</a></li>
+                                        <li><a asp-action="Delete" asp-route-id="@item.ID">Borrar</a></li>
+                                        <li><a asp-action="EditPublicacion" asp-route-id="@item.ID">Editar Publicación</a></li>
+                                    </ul>
+                                </div>
+                            }
                     </div>
                     <h5 class="card-content">@Html.DisplayFor(modelItem => item.Semestre)</h5>
                 </div>
