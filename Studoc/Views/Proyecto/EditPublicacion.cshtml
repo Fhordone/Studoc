@@ -12,12 +12,11 @@
     </div>
 
     <!-- ... otros campos de la publicación ... -->
-
     @for (var i = 0; i < Model.Pasos.Count; i++)
     {
         <div class="panel panel-default">
             <div class="panel-heading">
-                <h3 class="panel-title">Paso @i</h3>
+                <h3 class="panel-title">Paso @(i + 1)</h3>
             </div>
             <div class="panel-body">
                 <div class="form-group">
@@ -35,10 +34,54 @@
                     <input type="file" asp-for="Pasos[i].ImagenFile" class="form-control" />
                     <span asp-validation-for="Pasos[i].ImagenFile" class="text-danger"></span>
                 </div>
-                
             </div>
         </div>
     }
 
+    <!-- ... Agregar aquí la sección para agregar nuevos pasos dinámicamente ... -->
+
+    <div id="pasosContainer"></div>
+    <button id="agregarPaso" class="btn btn-success">Agregar Paso</button>
     <button type="submit" class="btn btn-primary">Guardar</button>
 </form>
+
+<script src="~/lib/jquery/dist/jquery.min.js"></script>
+<script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+    // Contador para llevar un seguimiento de los pasos agregados
+    var pasoCounter = @Model.Pasos.Count;
+
+    // Función para agregar un paso
+    function agregarPaso(event) {
+        event.preventDefault();
+        console.log("Agregar Paso hizo clic"); // Agrega esta línea
+        pasoCounter++;
+        var nuevoPaso = `
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <h3 class="panel-title">Paso ${pasoCounter}</h3>
+                        </div>
+                        <div class="panel-body">
+                            <div class="form-group">
+                                <label for="Pasos[${pasoCounter}].Titulo" class="control-label">Título</label>
+                                <input type="text" name="Pasos[${pasoCounter}].Titulo" class="form-control" />
+                            </div>
+                            <div class="form-group">
+                                <label for="Pasos[${pasoCounter}].Contenido" class="control-label">Contenido</label>
+                                <textarea name="Pasos[${pasoCounter}].Contenido" class="form-control" rows="4"></textarea>
+                            </div>
+                            <div class="form-group">
+                                <label for="Pasos[${pasoCounter}].ImagenFile" class="control-label">Imagen</label>
+                                <input type="file" name="Pasos[${pasoCounter}].ImagenFile" class="form-control" />
+                            </div>
+                        </div>
+                    </div>
+                `;
+
+        // Agregar el nuevo paso al formulario
+        $("#pasosContainer").append(nuevoPaso);
+    }
+
+    // Asociar la función de agregar paso al botón
+    $("#agregarPaso").click(agregarPaso);
+</script>
