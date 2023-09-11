@@ -137,19 +137,21 @@ namespace Studoc.Controllers
             var publicaciones =  _context.Proyecto.Include(u => u.Publicacion).FirstOrDefault(u => u.ID == id);
             return View(publicaciones);
         }
-        public IActionResult EditPublicacion(int id)
+        public async Task<IActionResult> EditPublicacion(int id)
         {
-            var publicacion = _context.Publicacion
-        .Include(p => p.Pasos) // Cargar los pasos relacionados
-        .FirstOrDefault(p => p.ID == id);
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var publicacion = await _context.Publicacion
+                .Include(p => p.Pasos)
+                .FirstOrDefaultAsync(p => p.ID == id);
 
             if (publicacion == null)
             {
                 return NotFound();
             }
-
-            // Ahora puedes acceder a los pasos sin que se produzca una excepción de referencia nula.
-            var pasos = publicacion.Pasos;
 
             return View(publicacion);
         }
@@ -233,11 +235,26 @@ namespace Studoc.Controllers
             }
             return View(publicacion);
         }
-
-
         private bool PublicacionExists(int id)
         {
             return _context.Publicacion.Any(p => p.ID == id);
+        }
+        private async Task<string> SaveImageAsync(IFormFile imageFile)
+        {
+            if (imageFile == null || imageFile.Length == 0)
+            {
+                return null;
+            }
+
+            var uniqueFileName = Guid.NewGuid().ToString() + "_" + imageFile.FileName;
+            var imagePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/imagenes_publicaciones", uniqueFileName);
+
+            using (var stream = new FileStream(imagePath, FileMode.Create))
+            {
+                await imageFile.CopyToAsync(stream);
+            }
+
+            return uniqueFileName;
         }
     }
 }
