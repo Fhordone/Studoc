@@ -29,11 +29,39 @@ namespace Studoc.Controllers
         {
             if (ModelState.IsValid)
             {
-                var usuario = await _context.Usuario.FirstOrDefaultAsync(u => u.Email == model.Email && u.Clave == model.Clave);
+                var usuario = await _context.Usuario
+            .Include(u => u.UsuarioRol)
+            .ThenInclude(ur => ur.Rol)
+            .FirstOrDefaultAsync(u => u.Email == model.Email && u.Clave == model.Clave);
 
                 if (usuario != null)
                 {
                     // Autenticación exitosa
+                    var claims = new List<Claim>
+                    {
+                        new Claim(ClaimTypes.Name, usuario.Nombres),
+                        new Claim(ClaimTypes.Surname, usuario.Apellidos),
+                        new Claim(ClaimTypes.NameIdentifier, usuario.ID.ToString()),
+                        new Claim("Correo", usuario.Email)
+                    };
+
+                    foreach (var usuarioRol in usuario.UsuarioRol)
+                    {
+                        if(usuarioRol.Rol != null)
+                        {
+                            claims.Add(new Claim(ClaimTypes.Role, usuarioRol.Rol.Nombre));
+                        }
+                    }
+
+                    var claimsIdentity = new ClaimsIdentity(claims,CookieAuthenticationDefaults.AuthenticationScheme);
+
+                    var authProperties = new AuthenticationProperties
+                    {
+                        IsPersistent = true,
+                    };
+
+                    await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, new ClaimsPrincipal(claimsIdentity), authProperties);
+
                     return RedirectToAction("Index", "Proyecto");
                 }
 
@@ -45,6 +73,11 @@ namespace Studoc.Controllers
         public IActionResult Register()
         {
             return View();
+        }
+        public async Task<IActionResult> Logout()
+        {
+            await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
+            return RedirectToAction("Index", "Login");
         }
     }
 }

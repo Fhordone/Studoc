@@ -1,4 +1,6 @@
-﻿<!DOCTYPE html>
+﻿@using Microsoft.AspNetCore.Identity
+@using System.Security.Claims
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8" />
@@ -6,33 +8,51 @@
     <title>@ViewData["Title"] - Studoc</title>
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/Menu.css" />
     <link rel="stylesheet" href="~/Studoc.styles.css" asp-append-version="true" />
 </head>
 <body>
     <header>
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
-            <div class="container-fluid">
-                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">Studoc</a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
-                        aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
-                    <ul class="navbar-nav flex-grow-1">
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Dashboard</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Anuncios</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Proyecto" asp-action="Index">Proyectos</a>
-                        </li>
-                    </ul>
+        <nav class="navbar-principal">
+            <div class="franja-azul"></div>
+            <div class="menu-white">
+                <div class="menu-desplegable">
+                    <label for="btn-menu-desplegable" class="fa-solid fa-bars"></label>
+                </div>
+                <div class="menu-tittle-left">
+                    <h1>Proyectos</h1>
+                </div>
+                <div class="menu-tittle-right">
+                    <h1>Diseño Responsable</h1>
+                    <h3>Ciclo : [ 2023 - II ]</h3>
                 </div>
             </div>
         </nav>
     </header>
+    <input type="checkbox" id="btn-menu-desplegable">
+    <div class="container-menu-desplegable">
+        <div class="contenido-menu-desplegable">
+            <div class="content-menu-user">
+                <h1>
+                    @User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Name)?.Value @User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Surname)?.Value
+                </h1>
+                <p>20211345</p>
+            </div>
+            <nav>
+                @if (User.IsInRole("Administrador"))
+                {
+                    <a href="#">Dashboard</a>
+                }
+                
+                <a asp-area="" asp-controller="Proyecto" asp-action="Index">Proyectos</a>
+                <a asp-area="" asp-controller="Proyecto" asp-action="MyProjects">Mis Proyectos</a>
+                <a href="#">Anuncios</a>
+                <a href="#">Charlas</a>
+                <a asp-area="" asp-controller="Login" asp-action="Logout">Cerrar Sesión</a>
+            </nav>
+            <label for="btn-menu-desplegable" class="fa-solid fa-xmark"></label>
+        </div>
+    </div>
     <div class="container">
         <main role="main" class="pb-3">
             @RenderBody()
