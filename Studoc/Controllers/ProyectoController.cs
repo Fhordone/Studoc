@@ -3,9 +3,13 @@ using Microsoft.EntityFrameworkCore;
 using Studoc.Data;
 using Studoc.Models;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
+using System.Security.Claims;
 
 namespace Studoc.Controllers
 {
+    [Authorize]
     public class ProyectoController : Controller
     {
         private readonly DatabaseContext _context;
@@ -109,6 +113,22 @@ namespace Studoc.Controllers
             _context.SaveChanges();
             return RedirectToAction(nameof(Index));
         }
+        public IActionResult val_integrante()
+        {
+            return View();
+        }
+        public IActionResult MyProjects()
+        {
+            // Obtén el usuario actual (esto puede variar según cómo gestionas la autenticación)
+            var usuarioActualId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+            // Filtra los proyectos en los que el usuario actual es un integrante
+            var proyectos = _context.Proyecto
+                .Where(p => p.Usuarios.Any(u => u.ID_User.ToString() == usuarioActualId))
+                .ToList();
+
+            return View("MyProjects", proyectos);
+        }
         // ---------------------------------------------------FIN DE PROYECTO-----------------------------------------------------------------
         // ---------------------------------------------------iNICIO DE PUBLICACION-----------------------------------------------------------
         //Redirecciona a la visualizar Publicación
@@ -117,19 +137,21 @@ namespace Studoc.Controllers
             var publicaciones =  _context.Proyecto.Include(u => u.Publicacion).FirstOrDefault(u => u.ID == id);
             return View(publicaciones);
         }
-        public IActionResult EditPublicacion(int id)
+        public async Task<IActionResult> EditPublicacion(int id)
         {
-            var publicacion = _context.Publicacion
-        .Include(p => p.Pasos) // Cargar los pasos relacionados
-        .FirstOrDefault(p => p.ID == id);
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var publicacion = await _context.Publicacion
+                .Include(p => p.Pasos)
+                .FirstOrDefaultAsync(p => p.ID == id);
 
             if (publicacion == null)
             {
                 return NotFound();
             }
-
-            // Ahora puedes acceder a los pasos sin que se produzca una excepción de referencia nula.
-            var pasos = publicacion.Pasos;
 
             return View(publicacion);
         }
@@ -213,11 +235,26 @@ namespace Studoc.Controllers
             }
             return View(publicacion);
         }
-
-
         private bool PublicacionExists(int id)
         {
             return _context.Publicacion.Any(p => p.ID == id);
+        }
+        private async Task<string> SaveImageAsync(IFormFile imageFile)
+        {
+            if (imageFile == null || imageFile.Length == 0)
+            {
+                return null;
+            }
+
+            var uniqueFileName = Guid.NewGuid().ToString() + "_" + imageFile.FileName;
+            var imagePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/imagenes_publicaciones", uniqueFileName);
+
+            using (var stream = new FileStream(imagePath, FileMode.Create))
+            {
+                await imageFile.CopyToAsync(stream);
+            }
+
+            return uniqueFileName;
         }
     }
 }

@@ -11,7 +11,7 @@ namespace Studoc.Models
         [ForeignKey("ID_Proyecto")]
         public int ID_Proyecto { get; set; }
         public Proyecto? Proyecto { get; set; }
-        public List<Paso> Pasos { get; set; }
+        public List<Paso> Pasos { get; set; } = new List<Paso>();
 
     }
 }
