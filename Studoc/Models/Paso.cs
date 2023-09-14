@@ -14,8 +14,6 @@ namespace Studoc.Models
         public int ID_Publicacion { get; set; }
         public Publicacion? Publicacion { get; set; }
         [NotMapped]
-        public byte[]? Imagen { get; set; } // Propiedad para almacenar la imagen en forma de matriz de bytes
-        [NotMapped] // Esta propiedad no se mapea a la base de datos
-        public IFormFile? ImagenFile { get; set; } // Propiedad para el archivo cargado de la imagen
+        public IFormFile? ImagenFile { get; set; }
     }
 }

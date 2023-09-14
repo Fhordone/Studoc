@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using System.Security.Claims;
+using System.IO;
 
 namespace Studoc.Controllers
 {
@@ -16,7 +17,7 @@ namespace Studoc.Controllers
         private readonly ILogger<HomeController> _logger;
         private readonly IWebHostEnvironment _env;
 
-    
+
 
         public ProyectoController(ILogger<HomeController> logger,
          DatabaseContext context,
@@ -38,7 +39,7 @@ namespace Studoc.Controllers
                 ID = u.ID,
                 NombresApellidos = $"{u.Nombres} {u.Apellidos}"
             }).ToList();
-            return View("CrearProyecto"); 
+            return View("CrearProyecto");
         }
         public IActionResult CreateProyecto(Proyecto proyecto, List<int> UserIds)
         {
@@ -132,31 +133,27 @@ namespace Studoc.Controllers
         // ---------------------------------------------------FIN DE PROYECTO-----------------------------------------------------------------
         // ---------------------------------------------------iNICIO DE PUBLICACION-----------------------------------------------------------
         //Redirecciona a la visualizar Publicación
-        public IActionResult Publicacion(int id) 
+        public IActionResult Publicacion(int id)
         {
-            var publicaciones =  _context.Proyecto.Include(u => u.Publicacion).FirstOrDefault(u => u.ID == id);
+            var publicaciones = _context.Proyecto.Include(u => u.Publicacion).FirstOrDefault(u => u.ID == id);
             return View(publicaciones);
         }
-        public async Task<IActionResult> EditPublicacion(int id)
+        public IActionResult EditPublicacion(int id)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var publicacion = await _context.Publicacion
-                .Include(p => p.Pasos)
-                .FirstOrDefaultAsync(p => p.ID == id);
-
+            var publicacion = _context.Publicacion
+        .Include(p => p.Pasos) // Cargar los pasos relacionados
+        .FirstOrDefault(p => p.ID == id);
             if (publicacion == null)
             {
                 return NotFound();
             }
+            // Ahora puedes acceder a los pasos sin que se produzca una excepción de referencia nula.
+            var pasos = publicacion.Pasos;
 
             return View(publicacion);
         }
 
-        // POST: Proyecto/EditPublicacion/5
+
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> EditPublicacion(int id, Publicacion publicacion)
@@ -165,7 +162,6 @@ namespace Studoc.Controllers
             {
                 return NotFound();
             }
-
             if (ModelState.IsValid)
             {
                 try
@@ -174,12 +170,10 @@ namespace Studoc.Controllers
                     var originalPublicacion = await _context.Publicacion
                         .Include(p => p.Pasos)
                         .FirstOrDefaultAsync(p => p.ID == id);
-
                     if (originalPublicacion == null)
                     {
                         return NotFound();
                     }
-
                     // Actualiza los campos de la entidad original desde la entidad modificada
                     originalPublicacion.Titulo = publicacion.Titulo;
                     // Actualiza otros campos de la publicación si es necesario
@@ -192,7 +186,6 @@ namespace Studoc.Controllers
                             _context.Remove(originalPaso);
                         }
                     }
-
                     // Itera sobre los pasos de la publicación
                     foreach (var paso in publicacion.Pasos)
                     {
@@ -222,16 +215,9 @@ namespace Studoc.Controllers
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!PublicacionExists(publicacion.ID))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
+                    throw;
                 }
-                return RedirectToAction("Index"); // Redirige a la página que desees después de editar la publicación.
+
             }
             return View(publicacion);
         }
