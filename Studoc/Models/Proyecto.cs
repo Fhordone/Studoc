@@ -17,7 +17,7 @@ namespace Studoc.Models
         public bool EsIntegrante { get; set; }
 
         [NotMapped]
-        public IFormFile Imagen { get; set; }
+        public IFormFile? Imagen { get; set; }
         public Publicacion? Publicacion { get; set; }
         public ICollection<Rel_User_Project> Usuarios { get; set; } = new List<Rel_User_Project>();
     }
