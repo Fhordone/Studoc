@@ -162,23 +162,21 @@ namespace Studoc.Controllers
             {
                 return NotFound();
             }
+
             if (ModelState.IsValid)
             {
                 try
                 {
-                    // Carga la entidad original desde la base de datos
                     var originalPublicacion = await _context.Publicacion
                         .Include(p => p.Pasos)
                         .FirstOrDefaultAsync(p => p.ID == id);
+
                     if (originalPublicacion == null)
                     {
                         return NotFound();
                     }
                     // Actualiza los campos de la entidad original desde la entidad modificada
                     originalPublicacion.Titulo = publicacion.Titulo;
-                    // Actualiza otros campos de la publicación si es necesario
-
-                    // Elimina los pasos que ya no existen en la entidad modificada
                     foreach (var originalPaso in originalPublicacion.Pasos.ToList())
                     {
                         if (!publicacion.Pasos.Any(p => p.ID == originalPaso.ID))
@@ -186,39 +184,68 @@ namespace Studoc.Controllers
                             _context.Remove(originalPaso);
                         }
                     }
-                    // Itera sobre los pasos de la publicación
                     foreach (var paso in publicacion.Pasos)
                     {
-                        // Comprueba si el paso es nuevo o existente
                         if (paso.ID == 0)
                         {
-                            // Este paso es nuevo, así que agrega el paso a la lista de pasos de la publicación
+                            // Paso nuevo
+                            if (paso.ImagenFile != null)
+                            {
+                                // Obtén la ruta raíz de wwwroot
+                                var webRootPath = _env.WebRootPath;
+
+                                // Construye la ruta de la imagen dentro de wwwroot/imagenes_publicaciones
+                                var imagePath = Path.Combine(webRootPath, "imagenes_publicaciones", paso.ImagenFile.FileName);
+
+                                // Procesa y almacena la imagen
+                                using (var stream = new FileStream(imagePath, FileMode.Create))
+                                {
+                                    await paso.ImagenFile.CopyToAsync(stream);
+                                }
+
+                                paso.ruta_img = Path.Combine("imagenes_publicaciones", paso.ImagenFile.FileName); // Actualiza la propiedad RutaImagen
+                            }
+
                             originalPublicacion.Pasos.Add(paso);
                         }
                         else
                         {
-                            // Este paso ya existe, así que actualiza sus campos
+                            // Paso existente
                             var originalPaso = originalPublicacion.Pasos.FirstOrDefault(p => p.ID == paso.ID);
                             if (originalPaso != null)
                             {
                                 originalPaso.Titulo = paso.Titulo;
                                 originalPaso.Contenido = paso.Contenido;
-                                // Actualiza otros campos del paso si es necesario
+
+                                if (paso.ImagenFile != null)
+                                {
+                                    // Obtén la ruta raíz de wwwroot
+                                    var webRootPath = _env.WebRootPath;
+
+                                    // Construye la ruta de la imagen dentro de wwwroot/imagenes_publicaciones
+                                    var imagePath = Path.Combine(webRootPath, "imagenes_publicaciones", paso.ImagenFile.FileName);
+
+                                    // Procesa y almacena la imagen
+                                    using (var stream = new FileStream(imagePath, FileMode.Create))
+                                    {
+                                        await paso.ImagenFile.CopyToAsync(stream);
+                                    }
+
+                                    originalPaso.ruta_img = Path.Combine("imagenes_publicaciones", paso.ImagenFile.FileName); // Actualiza la propiedad RutaImagen
+                                }
                             }
                         }
                     }
 
-                    // Actualiza la entidad original en el contexto
                     _context.Update(originalPublicacion);
-
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
                     throw;
                 }
-
             }
+
             return View(publicacion);
         }
         private bool PublicacionExists(int id)
