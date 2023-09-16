@@ -1,0 +1,58 @@
+@import url('https://fonts.cdnfonts.com/css/source-sans-pro');
+@import url('https://fonts.cdnfonts.com/css/roboto');
+body {
+    font-family: 'Arial', sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f2f2f2;
+    color: #333;
+}
+.container {
+    max-width: 800px;
+    margin: 20px auto;
+    padding: 20px;
+    background-color: white;
+    border-radius: 5px;
+    box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.article-title {
+    font-size: 28px;
+    margin-bottom: 10px;
+    text-align: center;
+    font-family: 'TT Norms Pro', sans-serif;
+    color: #042354;
+    font-weight: bold;
+}
+.article-content {
+    font-size: 18px;
+    line-height: 1.6;
+    margin-bottom: 20px;
+    
+}
+h3{
+    font-family: 'TT Norms Pro', sans-serif;
+    color: #042354;
+    font-weight: 500;
+}
+p{
+    font-family: 'Source Sans Pro', sans-serif;
+    color: #11438D;
+    font-weight: 400;
+}
+.edit-link {
+    display: inline-block;
+    margin-top: 10px;
+    color: #007BFF;
+    text-decoration: none;
+    border-bottom: 1px solid #007BFF;
+}
+img{
+    width: 100%;
+}
+.form-control{
+    margin: 50px;
+}
+.control-label{
+    margin-bottom: 10px;
+}

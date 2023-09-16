@@ -15,5 +15,7 @@ namespace Studoc.Models
         public Publicacion? Publicacion { get; set; }
         [NotMapped]
         public IFormFile? ImagenFile { get; set; }
+        [NotMapped]
+        public string? ContenidoQuill { get; set; }
     }
 }

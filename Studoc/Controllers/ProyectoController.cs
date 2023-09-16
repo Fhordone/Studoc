@@ -135,8 +135,17 @@ namespace Studoc.Controllers
         //Redirecciona a la visualizar Publicación
         public IActionResult Publicacion(int id)
         {
-            var publicaciones = _context.Proyecto.Include(u => u.Publicacion).FirstOrDefault(u => u.ID == id);
-            return View(publicaciones);
+            // Obtener la publicación deseada por su ID
+            var publicacion = _context.Publicacion
+                .Include(p => p.Pasos) // Incluye los pasos relacionados si es necesario
+                .FirstOrDefault(p => p.ID == id);
+
+            if (publicacion == null)
+            {
+                return NotFound(); // Manejo de caso en el que la publicación no se encuentra
+            }
+
+            return View(publicacion); // Pasar la instancia de Publicacion como modelo
         }
         public IActionResult EditPublicacion(int id)
         {
@@ -233,12 +242,19 @@ namespace Studoc.Controllers
 
                                     originalPaso.ruta_img = Path.Combine("imagenes_publicaciones", paso.ImagenFile.FileName); // Actualiza la propiedad RutaImagen
                                 }
+                                
                             }
                         }
                     }
 
                     _context.Update(originalPublicacion);
                     await _context.SaveChangesAsync();
+                    // Recarga la publicación desde la base de datos después de guardar los cambios
+                    originalPublicacion = await _context.Publicacion
+                        .Include(p => p.Pasos)
+                        .FirstOrDefaultAsync(p => p.ID == id);
+
+                    return RedirectToAction("Publicacion", new { id = originalPublicacion.ID });
                 }
                 catch (DbUpdateConcurrencyException)
                 {
@@ -247,27 +263,6 @@ namespace Studoc.Controllers
             }
 
             return View(publicacion);
-        }
-        private bool PublicacionExists(int id)
-        {
-            return _context.Publicacion.Any(p => p.ID == id);
-        }
-        private async Task<string> SaveImageAsync(IFormFile imageFile)
-        {
-            if (imageFile == null || imageFile.Length == 0)
-            {
-                return null;
-            }
-
-            var uniqueFileName = Guid.NewGuid().ToString() + "_" + imageFile.FileName;
-            var imagePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/imagenes_publicaciones", uniqueFileName);
-
-            using (var stream = new FileStream(imagePath, FileMode.Create))
-            {
-                await imageFile.CopyToAsync(stream);
-            }
-
-            return uniqueFileName;
         }
     }
 }

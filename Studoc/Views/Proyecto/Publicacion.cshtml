@@ -1,53 +1,32 @@
-﻿@model Studoc.Models.Proyecto
+﻿@model Studoc.Models.Publicacion
 
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Detalles de la Publicación</title>
-    <style>
-        body {
-            font-family: 'Arial', sans-serif;
-            margin: 0;
-            padding: 0;
-            background-color: #f2f2f2;
-            color: #333;
-        }
-
-        .container {
-            max-width: 800px;
-            margin: 20px auto;
-            padding: 20px;
-            background-color: white;
-            border-radius: 5px;
-            box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
-        }
-
-        .article-title {
-            font-size: 28px;
-            margin-bottom: 10px;
-        }
-
-        .article-content {
-            font-size: 18px;
-            line-height: 1.6;
-            margin-bottom: 20px;
-        }
-
-        .edit-link {
-            display: inline-block;
-            margin-top: 10px;
-            color: #007BFF;
-            text-decoration: none;
-            border-bottom: 1px solid #007BFF;
-        }
-    </style>
+    <title>Editar Publicación</title>
+    <link rel="stylesheet" href="~/css/Publicacion.css" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://kit.fontawesome.com/019078dbc4.js" crossorigin="anonymous"></script>
 </head>
 <body>
     <div class="container">
-        <h2 class="article-title">@Model.Publicacion.Titulo</h2>
-        <!--<p class="article-content">Model.Pasos.Paso_1</p>-->
+        <h2 class="article-title">@Model.Titulo</h2>
+
+        @for (int i = 0; i < Model.Pasos.Count; i++)
+    {
+        var paso = Model.Pasos[i];
+        <div class="paso">
+            <h3>Paso @(i + 1): @paso.Titulo</h3>
+            <p>@paso.Contenido</p>
+
+            @if (!string.IsNullOrEmpty(paso.ruta_img))
+            {
+                <img src="~/@Model.Pasos[i].ruta_img" alt="Imagen de paso"/>
+            }
+
+            <!-- Aquí puedes mostrar otros campos del paso si es necesario -->
+        </div>
+    }
     </div>
 </body>
 </html>
