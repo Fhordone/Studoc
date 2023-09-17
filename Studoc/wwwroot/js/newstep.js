@@ -19,7 +19,7 @@ $(document).ready(function () {
                             <textarea name="Pasos[${pasoIndex}].Contenido" class="form-control" rows="4"></textarea>
                         </div>
                         <div class="form-group">
-                            <label for="Pasos[${pasoIndex}].ImagenFile" class="control-label">Imagen</label>
+                            <label for="Pasos[${pasoIndex}].ImagenFile" class="control-label"></label>
                             <input type="file" name="Pasos[${pasoIndex}].ImagenFile" class="form-control" />
                         </div>
                     </div>
