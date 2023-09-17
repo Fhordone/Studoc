@@ -90,3 +90,6 @@ form {
     color: #ff0000;
     font-weight: bold;
 }
+.form-control[type=file]{
+    margin: 0;
+}
