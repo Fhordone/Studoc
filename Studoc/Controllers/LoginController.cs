@@ -74,6 +74,17 @@ namespace Studoc.Controllers
         {
             return View();
         }
+        public IActionResult CreateUser(Usuario usuario)
+        {
+            if (ModelState.IsValid)
+            {
+                _context.Usuario.Add(usuario);
+                _context.SaveChanges();
+
+                return RedirectToAction("Index");
+            }
+            return View(usuario);
+        }
         public async Task<IActionResult> Logout()
         {
             await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);

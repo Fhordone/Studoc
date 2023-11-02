@@ -21,37 +21,58 @@
             <div class="title">Forma parte de Diseño Responsable</div>
             <div class="form">
                 <div class="title-form">Registro</div>
-                <form>
+                <form asp-controller="Login" asp-action="CreateUser" method="post">
                     <div class="row">
                         <div>
                             <label for="nombres">Nombres:</label>
-                            <input type="text" id="nombres" name="nombres">
+                            <input type="text" id="nombres" name="nombres" asp-for="Nombres">
                         </div>
                         <div>
                             <label for="apellidos">Apellidos:</label>
-                            <input type="text" id="apellidos" name="apellidos">
+                            <input type="text" id="apellidos" name="apellidos" asp-for="Apellidos">
                         </div>
                     </div>
                     <div class="row">
                         <div>
                             <label for="fecha_nacimiento">Fecha de Nacimiento:</label>
-                            <input type="date" id="fecha_nacimiento" name="fecha_nacimiento">
+                            <input type="date" id="fecha_nacimiento" name="fecha_nacimiento" asp-for="Fecha_Nacimiento">
                         </div>
                         <div>
-                            <label for="codigo_pucp">Código PUCP:</label>
-                            <input type="number" id="codigo_pucp" name="codigo_pucp">
+                            <label for="Codigo">Código PUCP:</label>
+                            <input type="text" id="Codigo" name="Codigo" asp-for="Codigo">
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div>
+                            <label for="escuela">Escuela:</label>
+                            <input type="text" id="escuela" name="escuela" asp-for="Escuela">
+                        </div>
+                        <div>
+                            <label for="direccion">Dirección:</label>
+                            <input type="text" id="direccion" name="direccion" asp-for="Direccion">
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div>
+                            <label for="genero">Género:</label>
+                            <div>
+                                <input type="radio" id="masculino" name="Genero" value="Masculino" asp-for="Genero"> <label for="masculino">Masculino</label>
+                            </div>
+                            <div>
+                                <input type="radio" id="femenino" name="Genero" value="Femenino" asp-for="Genero"> <label for="femenino">Femenino</label>
+                            </div>
                         </div>
                     </div>
                     <div>
-                        <label for="correo">Correo Electrónico:</label>
-                        <input type="email" id="correo" name="correo">
+                        <label for="email">Correo Electrónico:</label>
+                        <input type="email" id="email" name="email" asp-for="Email">
                     </div>
                     <div>
-                        <label for="contrasena">Contraseña:</label>
-                        <input type="password" id="contrasena" name="contrasena">
+                        <label for="Clave">Contraseña:</label>
+                        <input type="password" id="Clave" name="Clave" asp-for="Clave">
                     </div>
                     <input type="submit" value="Registrarse">
-                    <div class="text-login">Si ya cuentas con un usuario, accede <a class="text-login-aqui" asp-controller="Login" asp-action="Index">aquí</a>.</div>
+                    <div class="text-login">Si ya cuentas con un usuario, accede <a class="text-login-aqui" asp-controller="Login" asp-action="Login">aquí</a>.</div>
                 </form>
             </div>
         </div>
