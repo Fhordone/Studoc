@@ -12,6 +12,7 @@ namespace Studoc.Models
         public string? ODS { get; set; }
         public string? Semestre { get; set; }
         public string? Categoria { get; set; }
+        public string? Descripcion { get; set; }
         public string? ruta_img { get; set; }
         [NotMapped]
         public bool EsIntegrante { get; set; }
