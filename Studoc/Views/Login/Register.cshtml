@@ -53,12 +53,12 @@
                         </div>
                     </div>
                     <div class="row">
-                        <div>
+                        <div class="row-gender">
                             <label for="genero">Género:</label>
-                            <div>
+                            <div class="right-gender">
                                 <input type="radio" id="masculino" name="Genero" value="Masculino" asp-for="Genero"> <label for="masculino">Masculino</label>
                             </div>
-                            <div>
+                            <div class ="left-gender">
                                 <input type="radio" id="femenino" name="Genero" value="Femenino" asp-for="Genero"> <label for="femenino">Femenino</label>
                             </div>
                         </div>
@@ -72,7 +72,7 @@
                         <input type="password" id="Clave" name="Clave" asp-for="Clave">
                     </div>
                     <input type="submit" value="Registrarse">
-                    <div class="text-login">Si ya cuentas con un usuario, accede <a class="text-login-aqui" asp-controller="Login" asp-action="Login">aquí</a>.</div>
+                    <div class="text-login">Si ya cuentas con un usuario, accede <a class="text-login-aqui" asp-controller="Login" asp-action="Index">aquí</a>.</div>
                 </form>
             </div>
         </div>
