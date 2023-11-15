@@ -6,12 +6,14 @@
 <!DOCTYPE html>
 
 <html>
+
 <head>
     <meta name="viewport" content="width=device-width" />
     <title>Registrarse</title>
     <link rel="stylesheet" href="~/css/Login.css" />
     </style>
 </head>
+
 <body>
     <div class="container">
         <div class="left">
@@ -25,59 +27,73 @@
                     <div class="row">
                         <div>
                             <label for="nombres">Nombres:</label>
-                            <input type="text" id="nombres" name="nombres" asp-for="Nombres">
+                            <input type="text" id="nombres" name="nombres" asp-for="Nombres" required>
+                            <span asp-validation-for="Nombres" class="text-danger"></span>
                         </div>
                         <div>
                             <label for="apellidos">Apellidos:</label>
-                            <input type="text" id="apellidos" name="apellidos" asp-for="Apellidos">
+                            <input type="text" id="apellidos" name="apellidos" asp-for="Apellidos" required>
+                            <span asp-validation-for="Apellidos" class="text-danger"></span>
                         </div>
                     </div>
                     <div class="row">
                         <div>
                             <label for="fecha_nacimiento">Fecha de Nacimiento:</label>
-                            <input type="date" id="fecha_nacimiento" name="fecha_nacimiento" asp-for="Fecha_Nacimiento">
+                            <input type="date" id="fecha_nacimiento" name="fecha_nacimiento" asp-for="Fecha_Nacimiento"
+                                required>
+                            <span asp-validation-for="Fecha_Nacimiento" class="text-danger"></span>
                         </div>
                         <div>
                             <label for="Codigo">Código PUCP:</label>
-                            <input type="text" id="Codigo" name="Codigo" asp-for="Codigo">
+                            <input type="text" id="Codigo" name="Codigo" asp-for="Codigo" required>
+                            <span asp-validation-for="Codigo" class="text-danger"></span>
                         </div>
                     </div>
                     <div class="row">
                         <div>
                             <label for="escuela">Escuela:</label>
-                            <input type="text" id="escuela" name="escuela" asp-for="Escuela">
+                            <input type="text" id="escuela" name="escuela" asp-for="Escuela" required>
+                            <span asp-validation-for="Escuela" class="text-danger"></span>
                         </div>
                         <div>
                             <label for="direccion">Dirección:</label>
-                            <input type="text" id="direccion" name="direccion" asp-for="Direccion">
+                            <input type="text" id="direccion" name="direccion" asp-for="Direccion" required>
+                            <span asp-validation-for="Direccion" class="text-danger"></span>
                         </div>
                     </div>
+
                     <div class="row">
                         <div class="row-gender">
                             <label for="genero">Género:</label>
                             <div class="right-gender">
-                                <input type="radio" id="masculino" name="Genero" value="Masculino" asp-for="Genero"> <label for="masculino">Masculino</label>
+                                <input type="radio" id="masculino" name="Genero" value="Masculino" asp-for="Genero"
+                                    required> <label for="masculino">Masculino</label>
                             </div>
-                            <div class ="left-gender">
-                                <input type="radio" id="femenino" name="Genero" value="Femenino" asp-for="Genero"> <label for="femenino">Femenino</label>
+                            <div class="left-gender">
+                                <input type="radio" id="femenino" name="Genero" value="Femenino" asp-for="Genero"
+                                    required> <label for="femenino">Femenino</label>
                             </div>
                         </div>
+                        <span asp-validation-for="Genero" class="text-danger"></span>
                     </div>
+
                     <div>
                         <label for="email">Correo Electrónico:</label>
-                        <input type="email" id="email" name="email" asp-for="Email">
+                        <input type="email" id="email" name="email" asp-for="Email" required>
+                        <span asp-validation-for="Email" class="text-danger"></span>
                     </div>
                     <div>
                         <label for="Clave">Contraseña:</label>
-                        <input type="password" id="Clave" name="Clave" asp-for="Clave">
+                        <input type="password" id="Clave" name="Clave" asp-for="Clave" required>
+                        <span asp-validation-for="Clave" class="text-danger"></span>
                     </div>
                     <input type="submit" value="Registrarse">
-                    <div class="text-login">Si ya cuentas con un usuario, accede <a class="text-login-aqui" asp-controller="Login" asp-action="Index">aquí</a>.</div>
+                    <div class="text-login">Si ya cuentas con un usuario, accede <a class="text-login-aqui"
+                            asp-controller="Login" asp-action="Index">aquí</a>.</div>
                 </form>
             </div>
         </div>
     </div>
 </body>
-
 
 </html>
