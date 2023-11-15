@@ -10,5 +10,6 @@ namespace Studoc.Models
         public string? Titulo { get; set; }
         public string? Subtitulo { get; set; }
         public string? Contenido { get; set; }
+        public string? ruta_img { get; set; }
     }
 }
